@@ -9,23 +9,45 @@ const SCENE_HEIGHT = 941;
 const ART_INSET = 18;
 const ART_SCALE = 1.035;
 
-// Pixel coordinates verified against the full-resolution background.
-// These are physical lanterns and path lights only; windows are intentionally
-// excluded so the flicker cannot appear as a random glow on the scenery.
+// Pixel coordinates extracted from the user's full-resolution red-spot markup.
+// Radius follows the relative size of each marked light source.
 const LANTERNS = [
-  { x: 611, y: 586, radius: 8, phase: 0.2 },
-  { x: 784, y: 621, radius: 6, phase: 3.1 },
-  { x: 883, y: 648, radius: 5, phase: 0.9 },
-  { x: 957, y: 649, radius: 4, phase: 2.5 },
-  { x: 1039, y: 620, radius: 8, phase: 4.2 },
-  { x: 1118, y: 702, radius: 7, phase: 1.3 },
-  { x: 1202, y: 575, radius: 5, phase: 3.8 },
-  { x: 1269, y: 349, radius: 7, phase: 5.1 },
-  { x: 1309, y: 592, radius: 7, phase: 0.5 },
-  { x: 1412, y: 457, radius: 8, phase: 2.8 },
-  { x: 1417, y: 493, radius: 5, phase: 4.7 },
-  { x: 779, y: 879, radius: 10, phase: 1.9 },
-];
+  { x: 1255, y: 206, radius: 7 },
+  { x: 699, y: 332, radius: 8 },
+  { x: 1273, y: 340, radius: 7 },
+  { x: 902, y: 344, radius: 7 },
+  { x: 683, y: 370, radius: 6 },
+  { x: 708, y: 370, radius: 6 },
+  { x: 584, y: 374, radius: 6 },
+  { x: 1114, y: 385, radius: 7 },
+  { x: 956, y: 394, radius: 6 },
+  { x: 922, y: 396, radius: 7 },
+  { x: 887, y: 398, radius: 6 },
+  { x: 751, y: 402, radius: 6 },
+  { x: 1089, y: 436, radius: 8 },
+  { x: 640, y: 439, radius: 5 },
+  { x: 1412, y: 450, radius: 11 },
+  { x: 907, y: 462, radius: 5 },
+  { x: 775, y: 477, radius: 4 },
+  { x: 1157, y: 489, radius: 6 },
+  { x: 1256, y: 489, radius: 15 },
+  { x: 1416, y: 495, radius: 5 },
+  { x: 796, y: 510, radius: 4 },
+  { x: 940, y: 526, radius: 5 },
+  { x: 701, y: 545, radius: 5 },
+  { x: 1198, y: 581, radius: 6 },
+  { x: 1299, y: 581, radius: 6 },
+  { x: 618, y: 594, radius: 5 },
+  { x: 1025, y: 619, radius: 5 },
+  { x: 1232, y: 630, radius: 6 },
+  { x: 791, y: 638, radius: 5 },
+  { x: 889, y: 646, radius: 5 },
+  { x: 949, y: 653, radius: 5 },
+  { x: 1118, y: 701, radius: 5 },
+].map((lantern, index) => ({
+  ...lantern,
+  phase: (index * 1.73) % (Math.PI * 2),
+}));
 
 let particles = [];
 let frameId = 0;
@@ -301,6 +323,30 @@ soundToggle?.addEventListener("click", async () => {
   if (audio.paused) await startAudio();
   else audio.pause();
 });
+
+const blogStartedAt = new Date(2013, 8, 7, 19, 11, 35).getTime();
+const uptimeParts = {
+  days: document.querySelector("#runtime-days"),
+  hours: document.querySelector("#runtime-hours"),
+  minutes: document.querySelector("#runtime-minutes"),
+  seconds: document.querySelector("#runtime-seconds"),
+};
+
+function updateBlogUptime() {
+  const totalSeconds = Math.max(0, Math.floor((Date.now() - blogStartedAt) / 1000));
+  const days = Math.floor(totalSeconds / 86400);
+  const hours = Math.floor((totalSeconds % 86400) / 3600);
+  const minutes = Math.floor((totalSeconds % 3600) / 60);
+  const seconds = totalSeconds % 60;
+
+  if (uptimeParts.days) uptimeParts.days.textContent = String(days);
+  if (uptimeParts.hours) uptimeParts.hours.textContent = String(hours).padStart(2, "0");
+  if (uptimeParts.minutes) uptimeParts.minutes.textContent = String(minutes).padStart(2, "0");
+  if (uptimeParts.seconds) uptimeParts.seconds.textContent = String(seconds).padStart(2, "0");
+}
+
+updateBlogUptime();
+window.setInterval(updateBlogUptime, 1000);
 
 document.addEventListener("keydown", (event) => {
   if (!["ArrowDown", "ArrowUp"].includes(event.key)) return;
