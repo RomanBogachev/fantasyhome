@@ -1,0 +1,136 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="description" content="Roman Bogachev — VMware specialist, drone pilot and traveler." />
+    <meta name="theme-color" content="#071017" />
+    <title>Roman Bogachev — Personal Realm</title>
+    <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Cpath fill='%23071017' stroke='%23d4b875' stroke-width='3' d='M32 3 57 17v30L32 61 7 47V17z'/%3E%3Cpath fill='%23f4f0e5' d='M21 18h15c8 0 13 4 13 10 0 5-3 8-7 9l8 11H39l-7-10h-2v10h-9zm9 8v5h5c3 0 4-1 4-3s-1-2-4-2z'/%3E%3C/svg%3E" />
+    <link rel="preload" href="assets/enchanted-village-v2.jpg" as="image" fetchpriority="high" />
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <a class="skip-link" href="#realms">Skip to destinations</a>
+
+    <div class="world" aria-hidden="true">
+      <div class="world__art"></div>
+      <div class="world__rays"></div>
+      <div class="world__shade"></div>
+      <div class="world__mist world__mist--one"></div>
+      <div class="world__mist world__mist--two"></div>
+      <canvas id="particles"></canvas>
+      <div class="world__grain"></div>
+    </div>
+
+    <header class="topbar">
+      <a class="brand" href="#home" aria-label="Roman Bogachev, home">
+        <svg viewBox="0 0 44 44" aria-hidden="true">
+          <path d="M22 3 38 12v20l-16 9-16-9V12L22 3Z" />
+          <path d="m22 9 10 6v14l-10 6-10-6V15l10-6Z" />
+          <path d="M16 16h7c4 0 6 2 6 5 0 2-1 4-3 4l4 6h-5l-3-5h-1v5h-5V16Zm5 4v3h2c1 0 2-1 2-2s-1-1-2-1h-2Z" />
+        </svg>
+        <span>Roman Bogachev<small>Personal realm</small></span>
+      </a>
+      <div class="topbar__meta">
+        <span class="location">55.7558° N · 37.6173° E</span>
+        <span class="presence"><i></i> Available for a new quest</span>
+        <button class="sound-toggle" type="button" aria-pressed="false" aria-label="Play background music">
+          <span class="sound-toggle__bars" aria-hidden="true"><i></i><i></i><i></i></span>
+          <span class="sound-toggle__label">Soundscape</span>
+        </button>
+      </div>
+    </header>
+
+    <main id="home">
+      <section class="identity" aria-labelledby="hero-title">
+        <div class="identity__ornament reveal reveal--1" aria-hidden="true"><span></span>Character profile<span></span></div>
+        <div class="identity__row">
+          <div class="avatar reveal reveal--2" role="img" aria-label="Placeholder portrait for Roman Bogachev">
+            <svg viewBox="0 0 160 160" aria-hidden="true">
+              <defs>
+                <radialGradient id="portraitGlow" cx="50%" cy="30%" r="75%">
+                  <stop offset="0" stop-color="#d5dddc" />
+                  <stop offset=".38" stop-color="#607977" />
+                  <stop offset="1" stop-color="#15252a" />
+                </radialGradient>
+                <linearGradient id="portraitGold" x1="0" y1="0" x2="1" y2="1">
+                  <stop stop-color="#ead89e" /><stop offset="1" stop-color="#80623d" />
+                </linearGradient>
+              </defs>
+              <rect width="160" height="160" fill="url(#portraitGlow)" />
+              <circle cx="80" cy="58" r="29" fill="#c7d1d0" opacity=".9" />
+              <path d="M28 160c4-39 23-63 52-63s48 24 52 63H28Z" fill="#23343a" />
+              <path d="M48 121c9-14 19-21 32-21s23 7 32 21l-13 39H61l-13-39Z" fill="#3c5355" />
+              <path d="m80 107 9 17-9 17-9-17 9-17Z" fill="url(#portraitGold)" />
+              <path d="M41 62c8-31 23-45 43-45 22 0 35 16 37 46-8-12-16-19-24-22-16 11-34 17-56 21Z" fill="#192b31" />
+              <path d="M38 34c21-22 55-30 81-10" fill="none" stroke="#d5bd7c" stroke-width="2" opacity=".7" />
+            </svg>
+          </div>
+          <div class="identity__level reveal reveal--2"><small>Level</small><strong>34</strong></div>
+        </div>
+        <p class="eyebrow reveal reveal--3">VMware specialist · Drone pilot · Traveler</p>
+        <h1 id="hero-title" class="reveal reveal--4">Roman<br />Bogachev</h1>
+        <p class="identity__copy reveal reveal--5">Building resilient systems and charting the world beyond the map.</p>
+        <a class="primary-action reveal reveal--6" href="#realms">
+          <span class="primary-action__mark" aria-hidden="true">◇</span>
+          <span><small>Enter the world</small>Begin journey</span>
+          <svg viewBox="0 0 20 20" aria-hidden="true"><path d="m7 4 6 6-6 6" /></svg>
+        </a>
+      </section>
+
+      <nav id="realms" class="realms" aria-label="Explore the realm">
+        <div class="realms__heading reveal reveal--3">
+          <span>World map</span>
+          <strong>Choose a destination</strong>
+        </div>
+        <div class="realm-list">
+          <a class="realm-link" href="#infrastructure" style="--delay: 0ms">
+            <b>01</b><span><strong>Infrastructure</strong><small>Systems built to endure</small></span>
+            <svg viewBox="0 0 20 20" aria-hidden="true"><path d="m7 4 6 6-6 6" /></svg>
+          </a>
+          <a class="realm-link" href="#homelab" style="--delay: 40ms">
+            <b>02</b><span><strong>Homelab</strong><small>Experiments after dark</small></span>
+            <svg viewBox="0 0 20 20" aria-hidden="true"><path d="m7 4 6 6-6 6" /></svg>
+          </a>
+          <a class="realm-link" href="#drone" style="--delay: 80ms">
+            <b>03</b><span><strong>Drone</strong><small>The world from above</small></span>
+            <svg viewBox="0 0 20 20" aria-hidden="true"><path d="m7 4 6 6-6 6" /></svg>
+          </a>
+          <a class="realm-link" href="#travel" style="--delay: 120ms">
+            <b>04</b><span><strong>Travel</strong><small>Field notes and routes</small></span>
+            <svg viewBox="0 0 20 20" aria-hidden="true"><path d="m7 4 6 6-6 6" /></svg>
+          </a>
+          <a class="realm-link" href="#projects" style="--delay: 160ms">
+            <b>05</b><span><strong>Projects</strong><small>Things brought to life</small></span>
+            <svg viewBox="0 0 20 20" aria-hidden="true"><path d="m7 4 6 6-6 6" /></svg>
+          </a>
+          <a class="realm-link" href="#blog" style="--delay: 200ms">
+            <b>06</b><span><strong>Blog</strong><small>Knowledge and discoveries</small></span>
+            <svg viewBox="0 0 20 20" aria-hidden="true"><path d="m7 4 6 6-6 6" /></svg>
+          </a>
+          <a class="realm-link" href="#gallery" style="--delay: 240ms">
+            <b>07</b><span><strong>Gallery</strong><small>Captured moments</small></span>
+            <svg viewBox="0 0 20 20" aria-hidden="true"><path d="m7 4 6 6-6 6" /></svg>
+          </a>
+          <a class="realm-link" href="#contacts" style="--delay: 280ms">
+            <b>08</b><span><strong>Contacts</strong><small>Send a raven</small></span>
+            <svg viewBox="0 0 20 20" aria-hidden="true"><path d="m7 4 6 6-6 6" /></svg>
+          </a>
+        </div>
+      </nav>
+    </main>
+
+    <footer>
+      <span>© 2026 Roman Bogachev</span>
+      <span class="footer__line"></span>
+      <span>Use ↑ ↓ to explore</span>
+    </footer>
+
+    <audio id="ambient-audio" loop preload="none">
+      <source src="assets/audio/forest-calling.m4a" type="audio/mp4" />
+    </audio>
+
+    <script src="script.js"></script>
+  </body>
+</html>
