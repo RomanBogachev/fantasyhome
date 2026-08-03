@@ -1,5 +1,6 @@
 const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)");
-const isMobile = window.matchMedia("(max-width: 700px)");
+const isMobile = window.matchMedia("(max-width: 720px)");
+const saveData = Boolean(navigator.connection?.saveData);
 const particleCanvas = document.querySelector("#particles");
 const particleContext = particleCanvas?.getContext("2d", { alpha: true });
 const worldArt = document.querySelector(".world__art");
@@ -9,8 +10,7 @@ const SCENE_HEIGHT = 941;
 const ART_INSET = 18;
 const ART_SCALE = 1.035;
 
-// Pixel coordinates extracted from the user's full-resolution red-spot markup.
-// Radius follows the relative size of each marked light source.
+// Coordinates are mapped to confirmed light sources in the supplied background.
 const LANTERNS = [
   { x: 1255, y: 206, radius: 7 },
   { x: 699, y: 332, radius: 8 },
@@ -44,16 +44,12 @@ const LANTERNS = [
   { x: 889, y: 646, radius: 5 },
   { x: 949, y: 653, radius: 5 },
   { x: 1118, y: 701, radius: 5 },
-].map((lantern, index) => ({
-  ...lantern,
-  phase: (index * 1.73) % (Math.PI * 2),
-}));
+].map((lantern, index) => ({ ...lantern, phase: (index * 1.73) % (Math.PI * 2) }));
 
 let particles = [];
 let frameId = 0;
 let lastFrame = 0;
-let sceneOffsetX = 0;
-let sceneOffsetY = 0;
+let sceneInitialized = false;
 
 function getSceneLayout() {
   const boxWidth = window.innerWidth + ART_INSET * 2;
@@ -62,6 +58,7 @@ function getSceneLayout() {
   const renderedWidth = SCENE_WIDTH * imageScale;
   const renderedHeight = SCENE_HEIGHT * imageScale;
   const positionX = isMobile.matches ? 0.57 : 0.5;
+
   return {
     imageScale,
     left: -ART_INSET + (boxWidth - renderedWidth) * positionX,
@@ -75,6 +72,7 @@ function scenePoint(point) {
   const baseY = layout.top + point.y * layout.imageScale;
   const centerX = window.innerWidth * 0.5;
   const centerY = window.innerHeight * 0.5;
+
   return {
     x: centerX + (baseX - centerX) * ART_SCALE,
     y: centerY + (baseY - centerY) * ART_SCALE,
@@ -114,21 +112,21 @@ function createButterfly(width, height) {
   };
 }
 
-function resizeCanvases() {
+function resizeCanvas() {
   if (!particleCanvas || !particleContext) return;
+
   const dpr = Math.min(window.devicePixelRatio || 1, 1.5);
   const width = window.innerWidth;
   const height = window.innerHeight;
-
   particleCanvas.width = Math.floor(width * dpr);
   particleCanvas.height = Math.floor(height * dpr);
   particleCanvas.style.width = `${width}px`;
   particleCanvas.style.height = `${height}px`;
   particleContext.setTransform(dpr, 0, 0, dpr, 0, 0);
 
-  const moteCount = isMobile.matches ? 18 : Math.min(42, Math.floor(width / 30));
-  const fireflyCount = isMobile.matches ? 9 : Math.min(24, Math.floor(width / 52));
-  const butterflyCount = isMobile.matches ? 2 : 7;
+  const moteCount = isMobile.matches ? 16 : Math.min(40, Math.floor(width / 32));
+  const fireflyCount = isMobile.matches ? 8 : Math.min(22, Math.floor(width / 56));
+  const butterflyCount = isMobile.matches ? 2 : 6;
   particles = [
     ...Array.from({ length: moteCount }, () => createParticle(width, height, "mote")),
     ...Array.from({ length: fireflyCount }, () => createParticle(width, height, "firefly")),
@@ -139,6 +137,7 @@ function resizeCanvases() {
 function drawLanterns(time) {
   particleContext.save();
   particleContext.globalCompositeOperation = "screen";
+
   for (const lantern of LANTERNS) {
     const point = scenePoint(lantern);
     const radius = sceneRadius(lantern, lantern.radius);
@@ -148,7 +147,6 @@ function drawLanterns(time) {
     const flicker = 0.82 + slowBreath * 0.08 + quickFlutter * 0.07 + tinyShimmer * 0.05;
     const radiusPulse = 1 + slowBreath * 0.06 + quickFlutter * 0.035;
     const glowRadius = radius * 4.35 * radiusPulse;
-
     const outerGlow = particleContext.createRadialGradient(point.x, point.y, 0, point.x, point.y, glowRadius);
     outerGlow.addColorStop(0, `rgba(255, 204, 92, ${0.3 * flicker})`);
     outerGlow.addColorStop(0.24, `rgba(255, 172, 49, ${0.2 * flicker})`);
@@ -159,18 +157,18 @@ function drawLanterns(time) {
     particleContext.arc(point.x, point.y, glowRadius, 0, Math.PI * 2);
     particleContext.fill();
 
-    const flameY = point.y;
     const coreRadius = radius * 1.55 * (0.96 + quickFlutter * 0.04);
-    const innerGlow = particleContext.createRadialGradient(point.x, flameY, 0, point.x, flameY, coreRadius);
+    const innerGlow = particleContext.createRadialGradient(point.x, point.y, 0, point.x, point.y, coreRadius);
     innerGlow.addColorStop(0, `rgba(255, 255, 226, ${0.94 * flicker})`);
     innerGlow.addColorStop(0.28, `rgba(255, 220, 116, ${0.72 * flicker})`);
     innerGlow.addColorStop(0.66, `rgba(255, 153, 42, ${0.28 * flicker})`);
     innerGlow.addColorStop(1, "rgba(236, 112, 22, 0)");
     particleContext.fillStyle = innerGlow;
     particleContext.beginPath();
-    particleContext.arc(point.x, flameY, coreRadius, 0, Math.PI * 2);
+    particleContext.arc(point.x, point.y, coreRadius, 0, Math.PI * 2);
     particleContext.fill();
   }
+
   particleContext.restore();
 }
 
@@ -213,8 +211,7 @@ function drawParticle(particle, time) {
   if (particle.x < -12) particle.x = window.innerWidth + 12;
   if (particle.x > window.innerWidth + 12) particle.x = -12;
 
-  const pulseRate = firefly ? 0.0032 : 0.001;
-  const pulse = 0.62 + Math.sin(time * pulseRate + particle.phase) * 0.38;
+  const pulse = 0.62 + Math.sin(time * (firefly ? 0.0032 : 0.001) + particle.phase) * 0.38;
   if (firefly) {
     const haloRadius = particle.radius * 7;
     const halo = particleContext.createRadialGradient(particle.x, particle.y, 0, particle.x, particle.y, haloRadius);
@@ -237,7 +234,7 @@ function drawParticle(particle, time) {
 }
 
 function drawScene(time) {
-  if (!particleContext || reduceMotion.matches || document.hidden) return;
+  if (!sceneInitialized || !particleContext || reduceMotion.matches || document.hidden) return;
   frameId = requestAnimationFrame(drawScene);
   if (time - lastFrame < 32) return;
   lastFrame = time;
@@ -253,22 +250,116 @@ function drawScene(time) {
 function startScene() {
   cancelAnimationFrame(frameId);
   particleContext?.clearRect(0, 0, window.innerWidth, window.innerHeight);
-  if (!reduceMotion.matches && !navigator.connection?.saveData) frameId = requestAnimationFrame(drawScene);
+  if (sceneInitialized && !reduceMotion.matches && !saveData && !document.hidden) frameId = requestAnimationFrame(drawScene);
 }
 
-let pointerFrame = 0;
-document.addEventListener("pointermove", (event) => {
-  if (reduceMotion.matches || isMobile.matches || pointerFrame || !worldArt || !particleCanvas) return;
-  pointerFrame = requestAnimationFrame(() => {
-    sceneOffsetX = ((event.clientX / window.innerWidth) - 0.5) * -9;
-    sceneOffsetY = ((event.clientY / window.innerHeight) - 0.5) * -5;
-    worldArt.style.transform = `translate3d(${sceneOffsetX.toFixed(2)}px, ${sceneOffsetY.toFixed(2)}px, 0) scale(${ART_SCALE})`;
-    particleCanvas.style.transform = `translate3d(${sceneOffsetX.toFixed(2)}px, ${sceneOffsetY.toFixed(2)}px, 0)`;
-    pointerFrame = 0;
+function initializeScene() {
+  if (sceneInitialized || !particleCanvas || !particleContext || saveData) return;
+  sceneInitialized = true;
+  resizeCanvas();
+  startScene();
+}
+
+if ("requestIdleCallback" in window) window.requestIdleCallback(initializeScene, { timeout: 1200 });
+else window.setTimeout(initializeScene, 350);
+
+function setupPointerParallax() {
+  if (!worldArt || !particleCanvas || isMobile.matches || reduceMotion.matches) return;
+
+  const hasGsap = Boolean(window.gsap);
+  const artX = hasGsap ? window.gsap.quickTo(worldArt, "x", { duration: 0.8, ease: "power3.out" }) : null;
+  const artY = hasGsap ? window.gsap.quickTo(worldArt, "y", { duration: 0.8, ease: "power3.out" }) : null;
+  const canvasX = hasGsap ? window.gsap.quickTo(particleCanvas, "x", { duration: 0.8, ease: "power3.out" }) : null;
+  const canvasY = hasGsap ? window.gsap.quickTo(particleCanvas, "y", { duration: 0.8, ease: "power3.out" }) : null;
+  let fallbackFrame = 0;
+
+  document.addEventListener("pointermove", (event) => {
+    if (document.hidden || reduceMotion.matches || isMobile.matches) return;
+    const x = ((event.clientX / window.innerWidth) - 0.5) * -9;
+    const y = ((event.clientY / window.innerHeight) - 0.5) * -5;
+
+    if (artX && artY && canvasX && canvasY) {
+      artX(x);
+      artY(y);
+      canvasX(x);
+      canvasY(y);
+      return;
+    }
+
+    if (fallbackFrame) return;
+    fallbackFrame = requestAnimationFrame(() => {
+      worldArt.style.transform = `translate3d(${x.toFixed(2)}px, ${y.toFixed(2)}px, 0) scale(${ART_SCALE})`;
+      particleCanvas.style.transform = `translate3d(${x.toFixed(2)}px, ${y.toFixed(2)}px, 0)`;
+      fallbackFrame = 0;
+    });
+  }, { passive: true });
+}
+
+function setupGsapMotion() {
+  if (!window.gsap || reduceMotion.matches) return;
+  const { gsap } = window;
+
+  gsap.timeline({ defaults: { ease: "power3.out" } })
+    .addLabel("world", 0)
+    .from(".world__art", { scale: 1.075, duration: 1.55, ease: "power2.out" }, "world")
+    .from("[data-intro='nav']", { y: -14, autoAlpha: 0, duration: 0.55 }, "world+=0.08")
+    .from("[data-intro='profile']", { x: -14, autoAlpha: 0, duration: 0.68 }, "world+=0.16")
+    .from(".project-tab", { autoAlpha: 0, duration: 0.3, stagger: 0.045 }, "world+=0.38")
+    .from("[data-intro='content']", { x: 14, autoAlpha: 0, duration: 0.68 }, "world+=0.24");
+}
+
+const projectTabs = Array.from(document.querySelectorAll(".project-tab"));
+const projectPanels = Array.from(document.querySelectorAll(".project-detail"));
+
+function activateProject(nextTab, { focus = false, instant = false } = {}) {
+  if (!nextTab) return;
+  const nextPanelId = nextTab.getAttribute("aria-controls");
+  const projectStage = document.querySelector(".project-stage");
+  const projectNav = document.querySelector(".project-nav");
+
+  if (instant) {
+    projectStage?.classList.add("is-instant");
+    projectNav?.classList.add("is-instant");
+  }
+
+  for (const tab of projectTabs) {
+    const selected = tab === nextTab;
+    tab.setAttribute("aria-selected", String(selected));
+    tab.tabIndex = selected ? 0 : -1;
+  }
+
+  for (const panel of projectPanels) {
+    const selected = panel.id === nextPanelId;
+    panel.setAttribute("aria-hidden", String(!selected));
+    panel.toggleAttribute("inert", !selected);
+  }
+
+  if (focus) nextTab.focus();
+  if (instant) {
+    requestAnimationFrame(() => requestAnimationFrame(() => {
+      projectStage?.classList.remove("is-instant");
+      projectNav?.classList.remove("is-instant");
+    }));
+  }
+}
+
+projectTabs.forEach((tab, index) => {
+  tab.addEventListener("click", () => activateProject(tab));
+  tab.addEventListener("keydown", (event) => {
+    const lastIndex = projectTabs.length - 1;
+    let nextIndex = index;
+
+    if (event.key === "ArrowDown" || event.key === "ArrowRight") nextIndex = index === lastIndex ? 0 : index + 1;
+    else if (event.key === "ArrowUp" || event.key === "ArrowLeft") nextIndex = index === 0 ? lastIndex : index - 1;
+    else if (event.key === "Home") nextIndex = 0;
+    else if (event.key === "End") nextIndex = lastIndex;
+    else return;
+
+    event.preventDefault();
+    activateProject(projectTabs[nextIndex], { focus: true, instant: true });
   });
 });
 
-const realmLinks = [...document.querySelectorAll(".realm-link")];
 const audio = document.querySelector("#ambient-audio");
 const soundToggle = document.querySelector(".sound-toggle");
 let audioUnlockAttached = false;
@@ -276,7 +367,7 @@ let audioUnlockAttached = false;
 function setSoundUI(playing) {
   if (!soundToggle) return;
   soundToggle.setAttribute("aria-pressed", String(playing));
-  soundToggle.setAttribute("aria-label", playing ? "Pause background music" : "Play background music");
+  soundToggle.setAttribute("aria-label", playing ? "Pause Elven Lullaby" : "Play Elven Lullaby");
 }
 
 function detachAudioUnlock() {
@@ -324,49 +415,30 @@ soundToggle?.addEventListener("click", async () => {
   else audio.pause();
 });
 
-const blogStartedAt = new Date(2013, 8, 7, 19, 11, 35).getTime();
-const uptimeParts = {
-  days: document.querySelector("#runtime-days"),
-  hours: document.querySelector("#runtime-hours"),
-  minutes: document.querySelector("#runtime-minutes"),
-  seconds: document.querySelector("#runtime-seconds"),
-};
+function handleVisibility() {
+  const paused = document.hidden;
+  document.body.classList.toggle("is-paused", paused);
 
-function updateBlogUptime() {
-  const totalSeconds = Math.max(0, Math.floor((Date.now() - blogStartedAt) / 1000));
-  const days = Math.floor(totalSeconds / 86400);
-  const hours = Math.floor((totalSeconds % 86400) / 3600);
-  const minutes = Math.floor((totalSeconds % 3600) / 60);
-  const seconds = totalSeconds % 60;
-
-  if (uptimeParts.days) uptimeParts.days.textContent = String(days);
-  if (uptimeParts.hours) uptimeParts.hours.textContent = String(hours).padStart(2, "0");
-  if (uptimeParts.minutes) uptimeParts.minutes.textContent = String(minutes).padStart(2, "0");
-  if (uptimeParts.seconds) uptimeParts.seconds.textContent = String(seconds).padStart(2, "0");
+  if (paused) {
+    cancelAnimationFrame(frameId);
+    window.gsap?.globalTimeline.pause();
+  } else {
+    window.gsap?.globalTimeline.resume();
+    startScene();
+  }
 }
 
-updateBlogUptime();
-window.setInterval(updateBlogUptime, 1000);
-
-document.addEventListener("keydown", (event) => {
-  if (!["ArrowDown", "ArrowUp"].includes(event.key)) return;
-  const current = realmLinks.indexOf(document.activeElement);
-  const direction = event.key === "ArrowDown" ? 1 : -1;
-  const next = current < 0 ? 0 : (current + direction + realmLinks.length) % realmLinks.length;
-  realmLinks[next]?.focus();
-  event.preventDefault();
+document.addEventListener("visibilitychange", handleVisibility);
+window.addEventListener("resize", () => {
+  if (sceneInitialized) resizeCanvas();
+  startScene();
+});
+reduceMotion.addEventListener("change", () => {
+  startScene();
+});
+window.addEventListener("beforeunload", () => {
+  cancelAnimationFrame(frameId);
 });
 
-document.querySelector(".primary-action")?.addEventListener("click", () => {
-  window.setTimeout(() => realmLinks[0]?.focus({ preventScroll: true }), 450);
-});
-
-document.addEventListener("visibilitychange", () => {
-  if (document.hidden) cancelAnimationFrame(frameId);
-  else startScene();
-});
-window.addEventListener("resize", () => { resizeCanvases(); startScene(); });
-reduceMotion.addEventListener("change", startScene);
-
-resizeCanvases();
-startScene();
+setupPointerParallax();
+setupGsapMotion();

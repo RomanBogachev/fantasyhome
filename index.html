@@ -1,17 +1,20 @@
 <!doctype html>
-<html lang="ru">
+<html lang="en">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <meta name="description" content="The Digital Garden by Roman Bogachev — cloud and network infrastructure, DIY projects, neural networks and filmmaking." />
-    <meta name="theme-color" content="#071017" />
+    <meta name="description" content="The Digital Garden of Roman Bogachev — VMware specialist, drone pilot, traveler and builder of resilient digital systems." />
+    <meta name="theme-color" content="#05090d" />
     <title>The Digital Garden — Roman Bogachev</title>
-    <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Cpath fill='%23071017' stroke='%23d4b875' stroke-width='3' d='M32 3 57 17v30L32 61 7 47V17z'/%3E%3Cpath fill='%23f4f0e5' d='M21 18h15c8 0 13 4 13 10 0 5-3 8-7 9l8 11H39l-7-10h-2v10h-9zm9 8v5h5c3 0 4-1 4-3s-1-2-4-2z'/%3E%3C/svg%3E" />
+    <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Cpath fill='%2305090d' stroke='%23d5b86f' stroke-width='3' d='M32 3 57 17v30L32 61 7 47V17z'/%3E%3Cpath fill='%23eee7d6' d='M21 18h15c8 0 13 4 13 10 0 5-3 8-7 9l8 11H39l-7-10h-2v10h-9zm9 8v5h5c3 0 4-1 4-3s-1-2-4-2z'/%3E%3C/svg%3E" />
     <link rel="preload" href="assets/enchanted-village-v2.jpg" as="image" fetchpriority="high" />
+    <link rel="preload" href="assets/roman-bogachev-avatar.jpg" as="image" />
     <link rel="stylesheet" href="styles.css" />
+    <script defer src="assets/vendor/gsap.min.js"></script>
+    <script defer src="script.js"></script>
   </head>
   <body>
-    <a class="skip-link" href="#services">Перейти к сервисам</a>
+    <a class="skip-link" href="#main-content">Skip to content</a>
 
     <div class="world" aria-hidden="true">
       <div class="world__art"></div>
@@ -23,114 +26,122 @@
       <div class="world__grain"></div>
     </div>
 
-    <header class="topbar">
-      <a class="brand" href="#home" aria-label="Roman Bogachev, home">
+    <header class="topbar" data-intro="nav">
+      <a class="brand" href="#home" aria-label="The Digital Garden, home">
         <svg viewBox="0 0 44 44" aria-hidden="true">
           <path d="M22 3 38 12v20l-16 9-16-9V12L22 3Z" />
           <path d="m22 9 10 6v14l-10 6-10-6V15l10-6Z" />
           <path d="M16 16h7c4 0 6 2 6 5 0 2-1 4-3 4l4 6h-5l-3-5h-1v5h-5V16Zm5 4v3h2c1 0 2-1 2-2s-1-1-2-1h-2Z" />
         </svg>
-        <span>Bogachev.biz<small>The Digital Garden</small></span>
+        <span>The Digital Garden<small>bogachev.biz</small></span>
       </a>
-      <div class="topbar__meta">
-        <button class="sound-toggle" type="button" aria-pressed="false" aria-label="Play background music">
-          <span class="sound-toggle__bars" aria-hidden="true"><i></i><i></i><i></i></span>
-          <span class="sound-toggle__label">Soundscape</span>
-        </button>
-      </div>
+
+      <button class="sound-toggle" type="button" aria-pressed="false" aria-label="Play Elven Lullaby">
+        <span class="sound-toggle__bars" aria-hidden="true"><i></i><i></i><i></i></span>
+        <span class="sound-toggle__label">Elven Lullaby</span>
+      </button>
     </header>
 
-    <main id="home">
-      <section class="identity" aria-labelledby="hero-title">
-        <div class="avatar reveal reveal--1">
-          <img class="avatar__image" src="assets/roman-bogachev-avatar.jpg" width="512" height="512" alt="Roman Bogachev" />
-        </div>
-        <p class="eyebrow reveal reveal--2">bogachev.biz</p>
-        <h1 id="hero-title" class="reveal reveal--3">The Digital Garden</h1>
-        <p class="identity__roles reveal reveal--4">Cloud &amp; Network Infrastructure · DIY · Neural Networks · Filmmaking</p>
-        <p class="identity__copy reveal reveal--5">I design cloud and network infrastructure, enjoy building DIY projects, and explore practical applications of neural networks. I also make films.</p>
-      </section>
-
-      <div class="side-stack">
-        <nav id="services" class="realms" aria-label="Сервисы Roman Bogachev">
-          <p class="realms__heading reveal reveal--2">My services</p>
-          <div class="realm-list">
-            <a class="realm-link" href="https://quiz.indigo-cat.ru" style="--delay: 0ms">
-              <span class="realm-link__icon" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M9.7 9a2.45 2.45 0 1 1 3.9 1.97c-.99.73-1.6 1.22-1.6 2.53M12 17.35h.01"/><circle cx="12" cy="12" r="9"/></svg></span>
-              <span><strong>Media Quiz</strong><small>Интерактивная викторина для вечера</small></span>
-              <svg class="realm-link__arrow" viewBox="0 0 20 20" aria-hidden="true"><path d="M5 15 15 5M8 5h7v7" /></svg>
-            </a>
-            <a class="realm-link" href="https://blog.bogachev.biz" style="--delay: 50ms">
-              <span class="realm-link__icon" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M4.5 5.2A3.2 3.2 0 0 1 7.7 2h3.8v17H7.7a3.2 3.2 0 0 0-3.2 3V5.2ZM19.5 5.2A3.2 3.2 0 0 0 16.3 2h-4.8v17h4.8a3.2 3.2 0 0 1 3.2 3V5.2Z"/></svg></span>
-              <span><strong>Geek's Technical Guidebook</strong><small>Технические заметки и инструкции</small></span>
-              <svg class="realm-link__arrow" viewBox="0 0 20 20" aria-hidden="true"><path d="M5 15 15 5M8 5h7v7" /></svg>
-            </a>
-            <a class="realm-link" href="https://status.indigo-cat.ru/" style="--delay: 100ms">
-              <span class="realm-link__icon" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M3 12h4l2.2-5.5 4.1 11L16 12h5"/><path d="M5 4.7A9 9 0 1 1 3 8" opacity=".6"/></svg></span>
-              <span><strong>Status Page</strong><small>Статус работы личных сервисов</small></span>
-              <svg class="realm-link__arrow" viewBox="0 0 20 20" aria-hidden="true"><path d="M5 15 15 5M8 5h7v7" /></svg>
-            </a>
-            <a class="realm-link" href="https://y2d.indigo-cat.ru" style="--delay: 150ms">
-              <span class="realm-link__icon" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M12 3v12m-4.5-4L12 15.5l4.5-4.5M5 20h14"/></svg></span>
-              <span><strong>MediaDownloader</strong><small>Загрузка видео/аудио из сети</small></span>
-              <svg class="realm-link__arrow" viewBox="0 0 20 20" aria-hidden="true"><path d="M5 15 15 5M8 5h7v7" /></svg>
-            </a>
-          </div>
-        </nav>
-
-        <section class="gateways reveal reveal--4" aria-labelledby="gateways-title">
-          <svg class="gateways__vine" viewBox="0 0 320 176" aria-hidden="true">
-            <path class="gateways__branch" d="M315 3c-29 13-41 29-55 52-12 20-34 27-56 34-35 12-56 32-68 62" />
-            <path class="gateways__twig" d="M273 35c-3 18 1 30 10 41M250 65c-16-2-29-9-39-21M218 84c-3 16 1 27 10 36M184 101c-15-1-27-7-38-19M155 127c-2 13 1 22 9 31" />
-            <g class="gateways__leaves">
-              <path d="M280 48c8-10 17-12 25-8-2 10-10 16-25 8Z" />
-              <path d="M253 61c-9-9-18-10-26-5 4 10 12 14 26 5Z" />
-              <path d="M226 91c8-10 17-12 25-7-3 10-11 15-25 7Z" />
-              <path d="M196 96c-9-8-18-8-25-2 5 9 13 12 25 2Z" />
-              <path d="M164 130c8-9 16-10 23-5-3 9-11 13-23 5Z" />
-              <path d="M145 139c-8-7-16-7-22-1 5 8 12 10 22 1Z" />
-            </g>
-          </svg>
-
-          <header class="gateways__header">
-            <div>
-              <p>Live network</p>
-              <h2 id="gateways-title">Telegram Gateways</h2>
+    <main id="main-content">
+      <section class="portal-layout" id="home" aria-labelledby="hero-title">
+        <div class="hero__aura" aria-hidden="true"><i></i><i></i><i></i></div>
+        <aside class="profile-panel" aria-label="About Roman Bogachev" data-intro="profile">
+          <div class="hero__identity">
+            <div class="hero__portrait" data-intro="portrait">
+              <svg class="hero__portrait-rune" viewBox="0 0 160 160" aria-hidden="true">
+                <circle cx="80" cy="80" r="72" />
+                <path d="M80 2v13M80 145v13M2 80h13M145 80h13M25 25l10 10M125 125l10 10M135 25l-10 10M35 125l-10 10" />
+                <path d="m80 8 8 12-8 7-8-7 8-12Zm0 125 8 7-8 12-8-12 8-7ZM8 80l12-8 7 8-7 8-12-8Zm125 0 7-8 12 8-12 8-7-8Z" />
+              </svg>
+              <span class="hero__portrait-frame">
+                <img src="assets/roman-bogachev-avatar.jpg" width="512" height="512" alt="Roman Bogachev" />
+              </span>
             </div>
-            <span class="gateways__updated"><i aria-hidden="true"></i>Preview data</span>
-          </header>
 
-          <div class="gateway-list">
-            <article class="gateway" data-state="operational">
-              <span class="gateway__sigil" aria-hidden="true">
-                <svg viewBox="0 0 32 32"><path d="M16 3c5 5 8 9 8 14a8 8 0 0 1-16 0c0-5 3-9 8-14Z"/><path d="M10 20c4-1 7-4 10-9M14 16c2 0 4 1 6 3"/></svg>
-                <i></i>
-              </span>
-              <span class="gateway__name"><strong>Gateway I</strong><small><span class="gateway__state">Operational</span> · Telegram Proxy</small></span>
-              <span class="gateway__ping"><strong>42</strong><small>ms</small></span>
+            <div class="hero__heading">
+              <p class="hero__realm" data-intro="copy">The Digital Garden</p>
+              <h1 id="hero-title" data-intro="copy">Roman Bogachev</h1>
+              <p class="hero__roles" data-intro="copy">
+                <span>VMware Specialist</span><i aria-hidden="true"></i><span>Drone Pilot</span><i aria-hidden="true"></i><span>Traveler</span>
+              </p>
+            </div>
+          </div>
+
+          <p class="hero__lede" data-intro="copy">I design cloud and network infrastructure, turning complex technologies into reliable and practical solutions. I enjoy DIY projects and exploring how neural networks can be applied to real-world ideas and personal projects. Beyond technology, I am a devoted fantasy enthusiast, inspired by imaginative worlds, exploration, and adventure.</p>
+
+          <nav class="project-nav" aria-labelledby="project-nav-title" data-intro="projects">
+            <p class="project-nav__label" id="project-nav-title">My projects <span aria-hidden="true"></span></p>
+            <div class="project-nav__list" role="tablist" aria-orientation="vertical">
+              <button class="project-tab" type="button" role="tab" id="tab-quiz" aria-controls="panel-quiz" aria-selected="true" data-project="quiz">
+                <span class="project-tab__sigil" aria-hidden="true">I</span>
+                <span class="project-tab__copy"><small>Gathering Hall</small><strong>Quiz</strong></span>
+                <svg viewBox="0 0 20 20" aria-hidden="true"><path d="m7 4 6 6-6 6" /></svg>
+              </button>
+              <button class="project-tab" type="button" role="tab" id="tab-blog" aria-controls="panel-blog" aria-selected="false" tabindex="-1" data-project="blog">
+                <span class="project-tab__sigil" aria-hidden="true">II</span>
+                <span class="project-tab__copy"><small>Archive Tower</small><strong>Blog</strong></span>
+                <svg viewBox="0 0 20 20" aria-hidden="true"><path d="m7 4 6 6-6 6" /></svg>
+              </button>
+              <button class="project-tab" type="button" role="tab" id="tab-status" aria-controls="panel-status" aria-selected="false" tabindex="-1" data-project="status">
+                <span class="project-tab__sigil" aria-hidden="true">III</span>
+                <span class="project-tab__copy"><small>Signal Keep</small><strong>Status</strong></span>
+                <svg viewBox="0 0 20 20" aria-hidden="true"><path d="m7 4 6 6-6 6" /></svg>
+              </button>
+              <button class="project-tab" type="button" role="tab" id="tab-y2d" aria-controls="panel-y2d" aria-selected="false" tabindex="-1" data-project="y2d">
+                <span class="project-tab__sigil" aria-hidden="true">IV</span>
+                <span class="project-tab__copy"><small>Courier's Dock</small><strong>y2d</strong></span>
+                <svg viewBox="0 0 20 20" aria-hidden="true"><path d="m7 4 6 6-6 6" /></svg>
+              </button>
+            </div>
+          </nav>
+        </aside>
+
+        <section class="project-view" aria-label="Selected project" data-intro="content">
+          <div class="project-view__frame" aria-hidden="true"><i></i><i></i><i></i><i></i></div>
+          <div class="project-stage" aria-live="polite">
+            <article class="project-detail" id="panel-quiz" role="tabpanel" aria-labelledby="tab-quiz" aria-hidden="false" tabindex="0">
+              <span class="project-detail__index" aria-hidden="true">I</span>
+              <p class="project-detail__realm">Gathering Hall</p>
+              <h2>Quiz</h2>
+              <p>Interactive trivia for an evening with friends.</p>
+              <a class="project-detail__cta" href="https://quiz.indigo-cat.ru" aria-label="Open Quiz service">
+                <span>Enter service</span><svg viewBox="0 0 20 20" aria-hidden="true"><path d="M5 15 15 5M8 5h7v7" /></svg>
+              </a>
             </article>
-            <article class="gateway" data-state="operational">
-              <span class="gateway__sigil" aria-hidden="true">
-                <svg viewBox="0 0 32 32"><path d="M16 3c5 5 8 9 8 14a8 8 0 0 1-16 0c0-5 3-9 8-14Z"/><path d="M10 20c4-1 7-4 10-9M14 16c2 0 4 1 6 3"/></svg>
-                <i></i>
-              </span>
-              <span class="gateway__name"><strong>Gateway II</strong><small><span class="gateway__state">Operational</span> · Telegram Proxy</small></span>
-              <span class="gateway__ping"><strong>68</strong><small>ms</small></span>
+            <article class="project-detail" id="panel-blog" role="tabpanel" aria-labelledby="tab-blog" aria-hidden="true" tabindex="0" inert>
+              <span class="project-detail__index" aria-hidden="true">II</span>
+              <p class="project-detail__realm">Archive Tower</p>
+              <h2>Blog</h2>
+              <p>Technical notes and practical guides.</p>
+              <a class="project-detail__cta" href="https://blog.bogachev.biz" aria-label="Open Blog service">
+                <span>Enter service</span><svg viewBox="0 0 20 20" aria-hidden="true"><path d="M5 15 15 5M8 5h7v7" /></svg>
+              </a>
+            </article>
+            <article class="project-detail" id="panel-status" role="tabpanel" aria-labelledby="tab-status" aria-hidden="true" tabindex="0" inert>
+              <span class="project-detail__index" aria-hidden="true">III</span>
+              <p class="project-detail__realm">Signal Keep</p>
+              <h2>Status</h2>
+              <p>Live health of personal services.</p>
+              <a class="project-detail__cta" href="https://status.indigo-cat.ru/" aria-label="Open Status service">
+                <span>Enter service</span><svg viewBox="0 0 20 20" aria-hidden="true"><path d="M5 15 15 5M8 5h7v7" /></svg>
+              </a>
+            </article>
+            <article class="project-detail" id="panel-y2d" role="tabpanel" aria-labelledby="tab-y2d" aria-hidden="true" tabindex="0" inert>
+              <span class="project-detail__index" aria-hidden="true">IV</span>
+              <p class="project-detail__realm">Courier's Dock</p>
+              <h2>y2d</h2>
+              <p>Download video and audio from supported sources.</p>
+              <a class="project-detail__cta" href="https://y2d.indigo-cat.ru" aria-label="Open y2d service">
+                <span>Enter service</span><svg viewBox="0 0 20 20" aria-hidden="true"><path d="M5 15 15 5M8 5h7v7" /></svg>
+              </a>
             </article>
           </div>
         </section>
-      </div>
+      </section>
     </main>
 
-    <footer>
-      <span>© 2013 - 2026&nbsp;&nbsp;&nbsp;Roman Bogachev</span>
-      <span>Blog up for <b id="runtime-days">0</b> days <b id="runtime-hours">00</b> hrs <b id="runtime-minutes">00</b> min <b id="runtime-seconds">00</b> sec</span>
-    </footer>
-
     <audio id="ambient-audio" loop preload="none">
-      <source src="assets/audio/forest-calling.m4a" type="audio/mp4" />
+      <source src="assets/audio/elven-lullaby.m4a" type="audio/mp4" />
     </audio>
-
-    <script src="script.js"></script>
   </body>
 </html>
